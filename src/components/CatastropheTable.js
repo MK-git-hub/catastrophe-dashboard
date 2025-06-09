@@ -1,4 +1,3 @@
-import React from 'react';
 
 function CatastropheTable({ data, loading }) {
   if (loading) {
@@ -14,8 +13,8 @@ function CatastropheTable({ data, loading }) {
       <thead>
         <tr>
           <th>Disaster Name</th>
-          <th>Region</th>
-          <th>Date</th>
+          <th>Address</th>
+          <th>Website</th>
           <th>Severity</th>
         </tr>
       </thead>
@@ -23,8 +22,8 @@ function CatastropheTable({ data, loading }) {
         {data.map((catastrophe, idx) => (
           <tr key={idx}>
             <td>{catastrophe.name}</td>
-            <td>{catastrophe.region}</td>
-            <td>{catastrophe.date}</td>
+            <td>{catastrophe.address.zipcode}</td>
+            <td>{catastrophe.website}</td>
             <td>{catastrophe.severity}</td>
           </tr>
         ))}

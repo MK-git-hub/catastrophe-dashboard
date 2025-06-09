@@ -1,14 +1,14 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import CatastrophePieChart from './components/CatastrophePChart';
 import CatastropheTable from './components/CatastropheTable';
 import ChartSection from './components/ChartSection';
 import Pagination from './components/Pagination';
-import PowerPointEmbed from './components/PowerPointEmbed';
 
 function App() {
   const [catastrophes, setCatastrophes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10); // items per page
+  const [perPage] = useState(5);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -18,14 +18,16 @@ function App() {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get(`https://api.example.com/disasters`, {
+      const response = await axios.get(`https://jsonplaceholder.typicode.com/users`, {
         params: {
           page: page,
           limit: perPage
         }
       });
 
-      setCatastrophes(response.data.results || []);
+      const startIdx = (page - 1) * perPage;
+      const endIdx = startIdx + perPage;
+      setCatastrophes(response.data.slice(startIdx, endIdx));
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -42,9 +44,7 @@ function App() {
     setCurrentPage(pageNumber);
   };
 
-  // Demo data for the charts
-  // In a real scenario, you would parse the fetched data to produce
-  // region-level aggregates, counts, and other metrics
+  // Demo numbers
   const regionData = [
     { region: 'North America', count: 25 },
     { region: 'South America', count: 12 },
@@ -72,14 +72,14 @@ function App() {
         <Pagination
           currentPage={currentPage}
           onPageChange={handlePageChange}
-          hasNextPage={catastrophes.length === perPage}
-        // Add logic or props for total pages if your API returns total count
+          hasNextPage={catastrophes.length >= perPage}
         />
 
 
         <ChartSection regionData={regionData} />
 
-        <PowerPointEmbed />
+        <CatastrophePieChart />
+
       </main>
 
       <footer className="footer">
